@@ -117,7 +117,7 @@ class Producer extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeFilter($query, $request, $category)
+    public function scopeFilter($query, $request)
     {
         return $query->where(function ($query) use ($request, $category) {
             if ($request->has('title') && !empty($request->get('title'))) {
@@ -126,11 +126,6 @@ class Producer extends Model
             if ($request->has('category') && !empty($request->get('category'))) {
                 $query->whereHas('categories', function ($q) use ($request) {
                     $q->where('producer_categories.id', (int)$request->get('category'));
-                });
-            }
-            if ($category) {
-                $query->whereHas('categories', function ($q) use ($category) {
-                    $q->where('producer_categories.id', $category->id);
                 });
             }
         });
